@@ -4,7 +4,7 @@ using namespace std;
 ifstream f("data.in");
 ofstream g("data.out");
 
-class robert {
+class NfaDfa {
 private:
 
     static const int sigma = 27;
@@ -50,14 +50,14 @@ public:
         R[nod1].Tranzitie[GetCharacter(ch) - 'a'].emplace(nod2);
     }
 
-    friend std::istream& operator >> (std::istream &in, robert &obiect);
+    friend std::istream& operator >> (std::istream &in, NfaDfa &obiect);
 
-    friend std::ostream& operator << (std::ostream &out, const robert &obiect);
+    friend std::ostream& operator << (std::ostream &out, const NfaDfa &obiect);
 
     void transformare();
 };
 
-void robert::LambdaNFA_in_NFA()
+void NfaDfa::LambdaNFA_in_NFA()
 {
     tip = "NFA";
     bool tranzitie_noua = true;
@@ -103,7 +103,7 @@ void robert::LambdaNFA_in_NFA()
             nicio_transformare += R[i].Tranzitie[j].size();
 }
 
-void robert::NFA_in_DFA()
+void NfaDfa::NFA_in_DFA()
 {
     int N_nicio_stare = 0, N_nicio_transformare = 0;
 
@@ -216,7 +216,7 @@ bool BFS(const int &criteriu_nod, int &N_nicio_stare, const std::unordered_set <
     return raspuns;
 }
 
-void robert::DFA_in_MinDFA()
+void NfaDfa::DFA_in_MinDFA()
 {
     int N_nicio_stare = 0, N_nicio_transformare = 0;
     std::unordered_set <int> N_stari_finale;
@@ -431,14 +431,14 @@ void robert::DFA_in_MinDFA()
     aici.clear();
 }
 
-void robert::transformare()
+void NfaDfa::transformare()
 {
     LambdaNFA_in_NFA();
     NFA_in_DFA();
     DFA_in_MinDFA();
 }
 
-std::istream& operator >> (std::istream &in, robert &obiect)
+std::istream& operator >> (std::istream &in, NfaDfa &obiect)
 {
     in >> obiect.tip;
     in >> obiect.nicio_stare >> obiect.nicio_transformare;
@@ -465,7 +465,7 @@ std::istream& operator >> (std::istream &in, robert &obiect)
     return in;
 }
 
-std::ostream& operator << (std::ostream &out, const robert &obiect)
+std::ostream& operator << (std::ostream &out, const NfaDfa &obiect)
 {
     out << "tip = " << obiect.tip << '\n';
     out << obiect.nicio_stare << " stari\n";
@@ -473,9 +473,9 @@ std::ostream& operator << (std::ostream &out, const robert &obiect)
 
     out << "Tranzitiile sunt:\n";
     for (int nanu = 0; nanu < obiect.nicio_stare; ++nanu)
-        for (int i = 0; i < robert::sigma; ++i)
+        for (int i = 0; i < NfaDfa::sigma; ++i)
             for (auto& it : obiect.R[nanu].Tranzitie[i])
-                out << nanu << ' ' << it << ' ' << robert::GetString(i) << '\n';
+                out << nanu << ' ' << it << ' ' << NfaDfa::GetString(i) << '\n';
 
     out << "Stare initiala: " << obiect.stare_initiala << '\n';
 
@@ -490,7 +490,7 @@ std::ostream& operator << (std::ostream &out, const robert &obiect)
 
 int main()
 {
-    robert D;
+    NfaDfa D;
     f >> D;
 
     D.transformare();
